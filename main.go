@@ -4,17 +4,20 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
 // our main function
 func main() {
+	log.Println("Starting trening-backend API on port 8080")
 	router := mux.NewRouter()
 	router.Use(commonMiddleware)
-
 	router.HandleFunc("/activities", getActivities).Methods("GET")
-	log.Fatal(http.ListenAndServe(":8000", router))
+	loggedRouter := handlers.LoggingHandler(os.Stdout, router)
+	log.Fatal(http.ListenAndServe(":8080", loggedRouter))
 }
 
 func commonMiddleware(next http.Handler) http.Handler {
