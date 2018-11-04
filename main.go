@@ -28,20 +28,23 @@ func commonMiddleware(next http.Handler) http.Handler {
 }
 
 func getActivities(w http.ResponseWriter, r *http.Request) {
+	session, err := NewSession()
+	if err != nil {
+		log.Fatalf("Unable to connect to mongo: %s", err)
+	}
 	var activities []activity
-	activities = append(activities, activity{ID: "1", Name: "3x8 på mølla", Distance: 5856.9, MovingTime: 2162, Type: "Run", WorkoutType: 0, StartDateLocal: "2018-10-17T16:49:38Z"})
-	activities = append(activities, activity{ID: "2", Name: "3x8 på mølla", Distance: 5856.9, MovingTime: 2162, Type: "Run", WorkoutType: 0, StartDateLocal: "2018-10-17T16:49:38Z"})
+	session.GetCollection("trening-s33", "activities").Find(nil).All(&activities)
 	json.NewEncoder(w).Encode(activities)
 }
 
 type activity struct {
-	ID                 string  `json:"id,omitempty"`
-	Name               string  `json:"name,omitempty"`
-	Distance           float32 `json:"distance,omitempty"`
-	MovingTime         int     `json:"moving_time,omitempty"`
-	TotalElevationGain float32 `json:"total_elevation_gain,omitempty"`
-	HasHeartrate       bool    `json:"has_heartrate,omitempty"`
-	WorkoutType        int     `json:"workout_type,omitempty"`
-	Type               string  `json:"type,omitempty"`
-	StartDateLocal     string  `json:"start_date_local,omitempty"`
+	ID                 string  `json:"id,omitempty" bson:"id,omitempty"`
+	Name               string  `json:"name,omitempty" bson:"name,omitempty"`
+	Distance           float32 `json:"distance,omitempty" bson:"distance,omitempty"`
+	MovingTime         int     `json:"moving_time,omitempty" bson:"moving_time,omitempty"`
+	TotalElevationGain float32 `json:"total_elevation_gain,omitempty" bson:"total_elevation_gain,omitempty"`
+	HasHeartrate       bool    `json:"has_heartrate,omitempty" bson:"has_heartrate,omitempty"`
+	WorkoutType        int     `json:"workout_type,omitempty" bson:"workout_type,omitempty"`
+	Type               string  `json:"type,omitempty" bson:"type,omitempty"`
+	StartDateLocal     string  `json:"start_date_local,omitempty" bson:"start_date_local,omitempty"`
 }
