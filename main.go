@@ -14,7 +14,7 @@ import (
 func main() {
 	log.Println("Starting trening-backend API on port 8080")
 	router := mux.NewRouter()
-	router.Use(commonMiddleware)
+	router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"*"})), commonMiddleware)
 	router.HandleFunc("/activities", getActivities).Methods("GET")
 	loggedRouter := handlers.LoggingHandler(os.Stdout, router)
 	log.Fatal(http.ListenAndServe(":8080", loggedRouter))
@@ -38,13 +38,13 @@ func getActivities(w http.ResponseWriter, r *http.Request) {
 }
 
 type activity struct {
-	ID                 string  `json:"id,omitempty" bson:"id,omitempty"`
-	Name               string  `json:"name,omitempty" bson:"name,omitempty"`
-	Distance           float32 `json:"distance,omitempty" bson:"distance,omitempty"`
-	MovingTime         int     `json:"moving_time,omitempty" bson:"moving_time,omitempty"`
-	TotalElevationGain float32 `json:"total_elevation_gain,omitempty" bson:"total_elevation_gain,omitempty"`
-	HasHeartrate       bool    `json:"has_heartrate,omitempty" bson:"has_heartrate,omitempty"`
-	WorkoutType        int     `json:"workout_type,omitempty" bson:"workout_type,omitempty"`
-	Type               string  `json:"type,omitempty" bson:"type,omitempty"`
-	StartDateLocal     string  `json:"start_date_local,omitempty" bson:"start_date_local,omitempty"`
+	ID                 int     `json:"id" bson:"id,omitempty"`
+	Name               string  `json:"name" bson:"name,omitempty"`
+	Distance           float32 `json:"distance" bson:"distance,omitempty"`
+	MovingTime         int     `json:"moving_time" bson:"moving_time,omitempty"`
+	TotalElevationGain float32 `json:"total_elevation_gain" bson:"total_elevation_gain,omitempty"`
+	HasHeartrate       bool    `json:"has_heartrate" bson:"has_heartrate,omitempty"`
+	WorkoutType        int     `json:"workout_type" bson:"workout_type,omitempty"`
+	Type               string  `json:"type" bson:"type,omitempty"`
+	StartDateLocal     string  `json:"start_date_local" bson:"start_date_local,omitempty"`
 }

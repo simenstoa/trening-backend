@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trening-backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: trening-backend
+  template:
+    metadata:
+      labels:
+        component: trening-backend
+    spec:
+      containers:
+        - name: trening-backend
+          image: trening-backend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
